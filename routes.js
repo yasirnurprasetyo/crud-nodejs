@@ -4,6 +4,17 @@ import Controller from "./controller.js"
 
 const routes = Router({strict: true})
 
+// Read Data
+routes.get(
+    "/posts", Controller.posts
+)
+routes.get(
+    "/post/:id",
+    [param("id", "Invalid post ID.").exists().isNumeric().toInt()],
+    Controller.validation,
+    Controller.posts
+)
+
 // Create Data
 routes.post(
     "/create",

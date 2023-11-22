@@ -18,6 +18,31 @@ class Controller {
         next()
     }
 
+    static posts = async (req, res, next) => {
+        try {
+            let sql = "SELECT * FROM `posts`"
+            if (req.params.id) {
+                sql = `SELECT * FROM posts WHERE id=${req.params.id}`
+            }
+            const [row] = await DB.query(sql)
+            if(row.length === 0 && req.params.id) {
+                return res.status(404).json({
+                    ok: 0,
+                    status: 404,
+                    message: "Invalid post ID."
+                })
+            }
+            const post = req.params.id ? {post:row[0]} : {posts: row}
+            res.status(200).json({
+                ok: 1,
+                status: 200,
+                ...post
+            })
+        }catch (e) {
+            next(e)
+        }
+    }
+
     static create = async (req, res, next) => {
         const { title, body, author} = matchedData(req)
         try {
