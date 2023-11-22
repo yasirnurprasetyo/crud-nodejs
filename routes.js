@@ -27,4 +27,15 @@ routes.post(
     Controller.create
 )
 
+// Update Data
+routes.put(
+    "/edit",[
+        body("post_id", "Invalid post ID").isNumeric().toInt(),
+        body("title", "Must not be empty").optional().trim().not().isEmpty().escape(),
+        body("body", "Must not be empty").optional().trim().not().isEmpty().escape(),
+        body("author", "Must not be empty").optional().trim().not().isEmpty().escape(),
+    ],
+    Controller.validation,
+    Controller.edit
+)
 export default routes

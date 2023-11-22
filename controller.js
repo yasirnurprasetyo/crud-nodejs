@@ -60,6 +60,39 @@ class Controller {
             next(e)
         }
     }
+
+    static edit = async (req, res, next) => {
+        try {
+            const data = matchedData(req)
+            const [row] = await DB.query("SELECT * FROM `posts` WHERE `id`=?", [
+                data.post_id
+            ])
+
+            if(row.length !== 1) {
+                return res.json({
+                    ok:0,
+                    status: 404,
+                    message: "Invalid Post ID."
+                })
+            }
+            const post = row[0]
+            const date = new Date().toISOString()
+            const title = data.title || post.title
+            const content = data.body || post.content
+            const author = data.author || post.author
+            await DB.execute(
+                "UPDATE `posts` SET `title`=?, `content`=?,`author`=?, `updated_at`=? WHERE `id`=?",
+                [title, content, author, date, data.post_id]
+            )
+            res.json({
+                ok: 1,
+                status: 200,
+                message: "Post Data Updated Successfully"
+            })
+        } catch(e) {
+            next(e)
+        }
+    }
 }
 
 export default Controller
