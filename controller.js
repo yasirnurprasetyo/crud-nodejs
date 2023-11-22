@@ -93,6 +93,29 @@ class Controller {
             next(e)
         }
     }
+
+    static delete = async (req, res, next) => {
+        try {
+            const[result] = await DB.execute(
+                "DELETE FROM `posts` WHERE `id`=?",
+                [req.body.post_id]
+            )
+            if (result.affectedRows) {
+                return res.json({
+                    ok:1,
+                    status:200,
+                    message: "Post data has been deleted successfully"
+                })
+            }
+            res.status(404).json({
+                ok: 0,
+                status: 404,
+                message: "Invalid post ID"
+            })
+        } catch(e) {
+            next(e)
+        }
+    }
 }
 
 export default Controller

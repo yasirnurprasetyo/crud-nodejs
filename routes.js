@@ -38,4 +38,15 @@ routes.put(
     Controller.validation,
     Controller.edit
 )
+
+// Delete Data
+routes.delete(
+    "/delete",
+    [
+        body("post_id", "Please provide a valid post ID.").exists().isNumeric().toInt()
+    ],
+    Controller.validation,
+    Controller.delete
+)
+
 export default routes
